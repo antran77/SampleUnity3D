@@ -6,6 +6,7 @@ public class BoxController : MonoBehaviour
 {
 
     private Transform m_transform;
+    private Material m_material;
     private int color_index;
     private int frane_count;
     private Color[] colors = new Color[]{Color.blue, Color.red, Color.green};
@@ -13,6 +14,7 @@ public class BoxController : MonoBehaviour
     void Start()
     {
         m_transform = this.transform;
+        m_material = this.GetComponent<MeshRenderer>().material;
         color_index = 0;
         frane_count = 0;
     }
@@ -22,10 +24,19 @@ public class BoxController : MonoBehaviour
     {
         m_transform.Rotate(1, 1.5f, 1);
         if (frane_count > 24) {
-            color_index++;
+            //color_index++;
             frane_count = 0;
         }
-        this.GetComponent<MeshRenderer>().material.color = colors[color_index%colors.Length];
+        m_material.color = colors[color_index%colors.Length];
         frane_count++;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            color_index++;
+        }
+    }
+    
+    public void ChangeColor() {
+        color_index++;
+        m_material.color = colors[color_index%colors.Length];
     }
 }
