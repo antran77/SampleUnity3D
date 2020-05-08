@@ -11,12 +11,14 @@ public class PlayerController : MonoBehaviour
     private int count;
     public Text countText;
     public Text winText;
+    private int numberOfPickup;
 
     void Start()
     {
         count = 0;        
         SetCountText();
         winText.text = "";
+        numberOfPickup = GameObject.FindGameObjectsWithTag("Pickup").Length;
     }
 
     void FixedUpdate() {
@@ -31,7 +33,7 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
-            if (count >= 11) {
+            if (count >= numberOfPickup) {
                 winText.text = "You win!";
             }
         }
