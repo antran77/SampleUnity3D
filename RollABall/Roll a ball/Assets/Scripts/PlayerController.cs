@@ -22,5 +22,7 @@ public class PlayerController : MonoBehaviour
         m_rigibody.AddForce(movement * speed);
     }
 
-    
+    private void OnTriggerEnter(Collider other) {
+        other.gameObject.SetActive(false);
+    }
 }
