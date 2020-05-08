@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
     public float speed;
     public Rigidbody m_rigibody;
+    private int count;
+    public Text countText;
+    public Text winText;
 
     void Start()
     {
-        
-
-         
+        count = 0;        
+        SetCountText();
+        winText.text = "";
     }
 
     void FixedUpdate() {
@@ -23,6 +27,17 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other) {
-        other.gameObject.SetActive(false);
+        if (other.gameObject.CompareTag("Pickup")) {
+            other.gameObject.SetActive(false);
+            count++;
+            SetCountText();
+            if (count >= 11) {
+                winText.text = "You win!";
+            }
+        }
+    }
+
+    private void SetCountText() {
+        countText.text = "Catched: " + count.ToString();
     }
 }
