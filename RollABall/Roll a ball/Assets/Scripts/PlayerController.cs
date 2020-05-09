@@ -41,13 +41,14 @@ public class PlayerController : MonoBehaviour
             if(Physics.Raycast(ray,out hit, raylength, layerMask))
             {
                 moveToPostion = hit.point;
-                Instantiate(myPrefab, new Vector3(hit.point.x, 0.5f, hit.point.z), Quaternion.identity, parent);
+                moveToPostion.y = 0.5f;
+                Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
             }
         }
 
         if(this.transform.position != moveToPostion)
         {
-            //this.transform.position = new Vector3(moveToPostion.x, 0.5f, moveToPostion.z);
+            this.transform.position = Vector3.MoveTowards(this.transform.position, moveToPostion, speed * Time.deltaTime );
         }
     }
 
