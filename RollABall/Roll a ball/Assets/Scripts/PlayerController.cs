@@ -53,7 +53,8 @@ public class PlayerController : MonoBehaviour
                 moveToPostion = hit.point;
                 moveToPostion.y = 0.5f;
                 spawnPosArray[currentSpawn++] = moveToPostion;
-                Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
+                GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
+                pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
             }
         }
 
