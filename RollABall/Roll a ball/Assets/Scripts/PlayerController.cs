@@ -60,7 +60,11 @@ public class PlayerController : MonoBehaviour
 
         if(currentSpawn > currentMove)
         {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, spawnPosArray[currentMove], speed * Time.deltaTime );
+            if (spawnPosArray[currentMove].y == 0) {
+                currentMove++;
+            } else {
+                this.transform.position = Vector3.MoveTowards(this.transform.position, spawnPosArray[currentMove], speed * Time.deltaTime );
+            }
         }
     }
 
@@ -77,7 +81,16 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
-            currentMove++;
+            if(other.transform.position == spawnPosArray[currentMove]){
+                currentMove++;
+            }
+            else {
+                for (int i = currentMove; i < currentSpawn; i++) {
+                    if (spawnPosArray[i] == other.transform.position) {
+                        spawnPosArray[i].y = 0;
+                    }
+                }
+            }
             // if (count >= numberOfPickup) {
             //     winText.text = "You win!";
             // }
