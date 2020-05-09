@@ -21,6 +21,11 @@ public class PlayerController : MonoBehaviour
     public LayerMask layerMask;
     public Vector3 moveToPostion;
 
+    private int maxSpawn;
+    private int currentMove;
+    private int currentSpawn;
+    private Vector3[] spawnPosArray;
+
     void Start()
     {
         count = 0;        
@@ -30,6 +35,11 @@ public class PlayerController : MonoBehaviour
         //numberOfPickup = GameObject.FindGameObjectsWithTag("Pickup").Length;
 
         moveToPostion = this.transform.position;
+
+        maxSpawn = 9999;
+        currentMove = 0;
+        currentSpawn = 0;
+        spawnPosArray = new Vector3[maxSpawn];
     }
 
     void Update()
@@ -42,13 +52,14 @@ public class PlayerController : MonoBehaviour
             {
                 moveToPostion = hit.point;
                 moveToPostion.y = 0.5f;
+                spawnPosArray[currentSpawn++] = moveToPostion;
                 Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
             }
         }
 
-        if(this.transform.position != moveToPostion)
+        if(currentSpawn > currentMove)
         {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, moveToPostion, speed * Time.deltaTime );
+            this.transform.position = Vector3.MoveTowards(this.transform.position, spawnPosArray[currentMove], speed * Time.deltaTime );
         }
     }
 
@@ -65,6 +76,7 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
+            currentMove++;
             // if (count >= numberOfPickup) {
             //     winText.text = "You win!";
             // }
