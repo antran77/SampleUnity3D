@@ -11,14 +11,44 @@ public class PlayerController : MonoBehaviour
     private int count;
     public Text countText;
     public Text winText;
-    private int numberOfPickup;
+    //private int numberOfPickup;
+    
+    public GameObject myPrefab;
+    public Transform parent;
+    public Camera camera;
+
+    public float raylength;
+    public LayerMask layerMask;
+    public Vector3 moveToPostion;
 
     void Start()
     {
         count = 0;        
         SetCountText();
         winText.text = "";
-        numberOfPickup = GameObject.FindGameObjectsWithTag("Pickup").Length;
+        
+        //numberOfPickup = GameObject.FindGameObjectsWithTag("Pickup").Length;
+
+        moveToPostion = this.transform.position;
+    }
+
+    void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            if(Physics.Raycast(ray,out hit, raylength, layerMask))
+            {
+                moveToPostion = hit.point;
+                Instantiate(myPrefab, new Vector3(hit.point.x, 0.5f, hit.point.z), Quaternion.identity, parent);
+            }
+        }
+
+        if(this.transform.position != moveToPostion)
+        {
+            //this.transform.position = new Vector3(moveToPostion.x, 0.5f, moveToPostion.z);
+        }
     }
 
     void FixedUpdate() {
@@ -26,6 +56,7 @@ public class PlayerController : MonoBehaviour
         float moveV = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(moveH, 0.0f, moveV);
         m_rigibody.AddForce(movement * speed);
+        
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -33,13 +64,19 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count++;
             SetCountText();
-            if (count >= numberOfPickup) {
-                winText.text = "You win!";
-            }
+            // if (count >= numberOfPickup) {
+            //     winText.text = "You win!";
+            // }
         }
     }
 
     private void SetCountText() {
         countText.text = "Catched: " + count.ToString();
+    }
+
+    public void Reset() {
+        count = 0;
+        SetCountText();
+        winText.text = "";
     }
 }
