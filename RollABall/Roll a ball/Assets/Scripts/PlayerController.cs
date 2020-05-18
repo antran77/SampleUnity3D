@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
         currentMove = 0;
         currentSpawn = 0;
         spawnPosArray = new Vector3[maxSpawn];
+        SimplePool.Preload(myPrefab);
     }
 
     void Update()
@@ -53,7 +54,8 @@ public class PlayerController : MonoBehaviour
                 moveToPostion = hit.point;
                 moveToPostion.y = 0.5f;
                 spawnPosArray[currentSpawn++] = moveToPostion;
-                GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
+                GameObject pickup = SimplePool.Spawn(myPrefab, moveToPostion, Quaternion.identity);
+                //GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
                 pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
             }
         }
@@ -78,7 +80,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Pickup")) {
-            other.gameObject.SetActive(false);
+            SimplePool.Despawn(other.gameObject);
+            //other.gameObject.SetActive(false);
             count++;
             SetCountText();
             if(other.transform.position == spawnPosArray[currentMove]){
