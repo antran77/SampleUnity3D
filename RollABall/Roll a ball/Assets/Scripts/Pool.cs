@@ -30,10 +30,10 @@ public class Pool : MonoBehaviour
     bool forcePoolSize = false;
 
     [SerializeField]
-    bool freeWhenUsed = false;
+    bool freeWhenExceeded = false;
 
-    Stack<GameObject> pooledInstances;
-    List<GameObject> aliveInstances;
+    private Stack<GameObject> pooledInstances;
+    private List<GameObject> aliveInstances;
 
     public GameObject Prefab { get { return prefab; } }
 
@@ -129,22 +129,26 @@ public class Pool : MonoBehaviour
             return;
         }
 
-        if (freeWhenUsed && initialPoolsize > 0) {
-            initialPoolsize--;
-            Destroy(obj);
-            aliveInstances.RemoveAt(index);
-        } else {
             
-            obj.SetActive(false);
+        obj.SetActive(false);
 
-            obj.transform.SetParent(transform);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localScale = Vector3.one;
-            obj.transform.localEulerAngles = Vector3.zero;
+        obj.transform.SetParent(transform);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localEulerAngles = Vector3.zero;
 
-            aliveInstances.RemoveAt(index);
+        aliveInstances.RemoveAt(index);
+        if(freeWhenExceeded) {
+            Debug.Log(pooledInstances.Count);
+            if(pooledInstances.Count < initialPoolsize){
+                pooledInstances.Push(obj);
+            } else{
+                Destroy(obj);
+            }
+        } else {
             pooledInstances.Push(obj);
         }
+        
     }
 
     public bool IsResponsibleForObject(GameObject obj)
