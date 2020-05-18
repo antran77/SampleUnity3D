@@ -26,6 +26,12 @@ public class Pool : MonoBehaviour
     [SerializeField]
     int initialPoolsize = 10;
 
+    [SerializeField]
+    bool forcePoolSize = false;
+
+    [SerializeField]
+    bool freeWhenUsed = false;
+
     Stack<GameObject> pooledInstances;
     List<GameObject> aliveInstances;
 
@@ -63,6 +69,10 @@ public class Pool : MonoBehaviour
     {
         if (pooledInstances.Count <= 0) // Every game object has been spawned!
         {
+            if (forcePoolSize) {
+                return null;
+            }
+
             GameObject newlyInstantiatedObject = Instantiate(prefab);
 
             newlyInstantiatedObject.transform.SetParent(parent);
@@ -119,15 +129,22 @@ public class Pool : MonoBehaviour
             return;
         }
 
-        obj.SetActive(false);
+        if (freeWhenUsed && initialPoolsize > 0) {
+            initialPoolsize--;
+            Destroy(obj);
+            aliveInstances.RemoveAt(index);
+        } else {
+            
+            obj.SetActive(false);
 
-        obj.transform.SetParent(transform);
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localScale = Vector3.one;
-        obj.transform.localEulerAngles = Vector3.zero;
+            obj.transform.SetParent(transform);
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localScale = Vector3.one;
+            obj.transform.localEulerAngles = Vector3.zero;
 
-        aliveInstances.RemoveAt(index);
-        pooledInstances.Push(obj);
+            aliveInstances.RemoveAt(index);
+            pooledInstances.Push(obj);
+        }
     }
 
     public bool IsResponsibleForObject(GameObject obj)

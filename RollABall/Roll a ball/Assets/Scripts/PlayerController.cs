@@ -57,7 +57,9 @@ public class PlayerController : MonoBehaviour
                 moveToPostion.y = 0.5f;
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
-                pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
+                if (pickup != null) {
+                    pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
+                }
           //      GameObject pickup = SimplePool.Spawn(myPrefab, moveToPostion, Quaternion.identity);
                 //GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
           //      pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
