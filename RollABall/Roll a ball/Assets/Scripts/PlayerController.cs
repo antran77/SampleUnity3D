@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     private Vector3[] spawnPosArray;
     private bool run;
 
+    Animator m_Animator;
+    public bool isGround;
+
     void Start()
     {
         count = 0;   
@@ -42,7 +45,18 @@ public class PlayerController : MonoBehaviour
         currentMove = 0;
         currentSpawn = 0;
         spawnPosArray = new Vector3[maxSpawn];
-        //SimplePool.Preload(myPrefab);
+        m_Animator = gameObject.GetComponent<Animator>();
+    }
+
+    // void OnJump()
+    // {
+    //     m_rigibody.AddForce(jump * jumpForce, ForceMode.Impulse);
+    //     isGround = false;
+    // }
+
+    void OnCollisionStay()
+    {
+        isGround = true;
     }
 
     void Update()
@@ -71,12 +85,17 @@ public class PlayerController : MonoBehaviour
         }
 
         if(currentSpawn > currentMove && run)
-        {
-            if (spawnPosArray[currentMove].y == 0) {
-                currentMove++;
-            } else {
-                this.transform.position = Vector3.MoveTowards(this.transform.position, spawnPosArray[currentMove], speed * Time.deltaTime );
+        {      
+            GameObject parent = GameObject.Find("PlayerBound");
+            parent.transform.position = Vector3.MoveTowards(parent.transform.position, spawnPosArray[currentMove], speed * Time.deltaTime);
+
+            if (m_Animator.GetBool("isIdle"))
+            {
+                m_Animator.Rebind();
+                m_Animator.SetBool("isIdle", false);
+                m_Animator.Play("RunPlayer");
             }
+            
         }
     }
 
@@ -95,22 +114,16 @@ public class PlayerController : MonoBehaviour
             
             count++;
             SetCountText();
-            if(other.transform.position == spawnPosArray[currentMove]){
-                currentMove++;
-            }
-            else {
-                for (int i = currentMove; i < currentSpawn; i++) {
-                    if (spawnPosArray[i] == other.transform.position) {
-                        spawnPosArray[i].y = 0;
-                    }
-                }
-            }
+            currentMove++;
             other.gameObject.Kill();
             // if (count >= numberOfPickup) {
             //     winText.text = "You win!";
             // }
             if (currentMove >= currentSpawn) {
                 run = false;
+                m_Animator.Rebind();
+                m_Animator.SetBool("isIdle", true);
+                m_Animator.Play("IdlePlayer");
             }
         }
     }
