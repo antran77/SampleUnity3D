@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     public bool isGround;
 
     public int ColorChoice = 0;
+    int colorState = 0;
+
     void Start()
     {
         count = 0;   
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour
         currentSpawn = 0;
         spawnPosArray = new Vector3[maxSpawn];
         m_Animator = gameObject.GetComponent<Animator>();
+        colorState = 0;
     }
 
     // void OnJump()
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
                     //pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
-                    pickup.GetComponent<Animator>().SetInteger("ColorChoice", ColorChoice);
+                    pickup.GetComponent<Animator>().SetInteger("ColorChoice", (int)Random.Range(0,3));
                     pickup.SetActive(true);
                 }
           //      GameObject pickup = SimplePool.Spawn(myPrefab, moveToPostion, Quaternion.identity);
