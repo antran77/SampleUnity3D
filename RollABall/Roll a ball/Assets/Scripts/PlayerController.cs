@@ -25,11 +25,12 @@ public class PlayerController : MonoBehaviour
     private int currentMove;
     private int currentSpawn;
     private Vector3[] spawnPosArray;
-    private bool run;
+    private bool run = true;
 
     Animator m_Animator;
     public bool isGround;
 
+    public int ColorChoice = 0;
     void Start()
     {
         count = 0;   
@@ -72,7 +73,9 @@ public class PlayerController : MonoBehaviour
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
-                    pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
+                    //pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
+                    pickup.GetComponent<Animator>().SetInteger("ColorChoice", ColorChoice);
+                    pickup.SetActive(true);
                 }
           //      GameObject pickup = SimplePool.Spawn(myPrefab, moveToPostion, Quaternion.identity);
                 //GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
@@ -80,7 +83,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetKey("down")){
+        //if(Input.GetKey("down"))
+        {
             run = true;
         }
 
@@ -120,7 +124,7 @@ public class PlayerController : MonoBehaviour
             //     winText.text = "You win!";
             // }
             if (currentMove >= currentSpawn) {
-                run = false;
+                //run = false;
                 m_Animator.Rebind();
                 m_Animator.SetBool("isIdle", true);
                 m_Animator.Play("IdlePlayer");
