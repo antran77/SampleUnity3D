@@ -161,4 +161,17 @@ public class Pool : MonoBehaviour
 
         return true;
     }
+
+    public void CheckUpdate(GameObject obj)
+    {
+        //foreach(GameObject obj in aliveInstances)
+        {
+            //Debug.Log("Obj name: " + obj.tag);
+            if(obj.CompareTag("PickupExit"))
+            {
+                int index = aliveInstances.FindIndex(o => obj == o);
+                Debug.Log("Found die at index " + index);
+            }
+        }
+    }
 }

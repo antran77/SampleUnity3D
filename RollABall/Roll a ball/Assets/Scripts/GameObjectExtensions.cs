@@ -61,4 +61,8 @@ public static class GameObjectExtensions
     {
         PoolManager.Kill(obj, surpassWarning);
     }
+    public static void CheckUpdate(this GameObject obj)
+    {
+        PoolManager.CheckUpdate(obj);
+    }
 }

@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
                     //pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
                     pickup.GetComponent<Animator>().SetInteger("ColorChoice", (int)Random.Range(0,3));
                     pickup.SetActive(true);
+                   
                 }
           //      GameObject pickup = SimplePool.Spawn(myPrefab, moveToPostion, Quaternion.identity);
                 //GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
@@ -104,15 +105,33 @@ public class PlayerController : MonoBehaviour
             }
             
         }
+        
+        GameObject obj = GameObject.FindGameObjectWithTag("PickupExit");
+        if(obj != null)
+        {
+            ResetPickup(obj);
+        }
     }
 
-    void FixedUpdate() {
-        float moveH = Input.GetAxis("Horizontal");
-        float moveV = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(moveH, 0.0f, moveV);
-        m_rigibody.AddForce(movement * speed);
-        
+    private void ResetPickup(GameObject obj)
+    {
+        if(obj.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            obj.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+            obj.gameObject.gameObject.tag = "Pickup";
+            obj.gameObject.GetComponent<Animator>().SetBool("isActive", true);
+            obj.gameObject.Kill();
+            Debug.Log("Reset Pickups");
+        }
     }
+
+    // void FixedUpdate() {
+    //     float moveH = Input.GetAxis("Horizontal");
+    //     float moveV = Input.GetAxis("Vertical");
+    //     Vector3 movement = new Vector3(moveH, 0.0f, moveV);
+    //     m_rigibody.AddForce(movement * speed);
+        
+    // }
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Pickup")) {
@@ -122,7 +141,10 @@ public class PlayerController : MonoBehaviour
             count++;
             SetCountText();
             currentMove++;
-            other.gameObject.Kill();
+            //other.gameObject.Kill();
+            other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+            other.gameObject.GetComponent<Animator>().SetBool("isActive", false);
+            other.gameObject.tag = "PickupExit";
             // if (count >= numberOfPickup) {
             //     winText.text = "You win!";
             // }
