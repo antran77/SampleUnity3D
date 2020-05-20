@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
                 if (pickup != null) {
                     //pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
                     pickup.GetComponent<Animator>().SetInteger("ColorChoice", (int)Random.Range(0,3));
+                    pickup.GetComponent<Animator>().SetBool("isActive", true);
                     pickup.SetActive(true);
                    
                 }
@@ -125,6 +126,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void LateUpdate()
+    {
+        this.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
+    }
     // void FixedUpdate() {
     //     float moveH = Input.GetAxis("Horizontal");
     //     float moveV = Input.GetAxis("Vertical");
@@ -142,8 +147,10 @@ public class PlayerController : MonoBehaviour
             SetCountText();
             currentMove++;
             //other.gameObject.Kill();
-            other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+            other.gameObject.GetComponent<Animator>().Rebind();
             other.gameObject.GetComponent<Animator>().SetBool("isActive", false);
+            other.gameObject.GetComponent<Animator>().Play("FadeOut");
             other.gameObject.tag = "PickupExit";
             // if (count >= numberOfPickup) {
             //     winText.text = "You win!";
