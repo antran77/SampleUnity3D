@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public Text countText;
     public Text winText;
     //private int numberOfPickup;
+    public GameObject m_kachujin;
     
     public GameObject myPrefab;
     public Transform parent;
@@ -33,6 +34,8 @@ public class PlayerController : MonoBehaviour
     public int ColorChoice = 0;
     int colorState = 0;
 
+    Quaternion kachujinOriginalRotation;
+
     void Start()
     {
         count = 0;   
@@ -50,13 +53,10 @@ public class PlayerController : MonoBehaviour
         spawnPosArray = new Vector3[maxSpawn];
         m_Animator = gameObject.GetComponent<Animator>();
         colorState = 0;
+        
+        kachujinOriginalRotation = m_kachujin.transform.rotation;
+        //m_kachujin.transform.Rotate(0,25,0);
     }
-
-    // void OnJump()
-    // {
-    //     m_rigibody.AddForce(jump * jumpForce, ForceMode.Impulse);
-    //     isGround = false;
-    // }
 
     void OnCollisionStay()
     {
@@ -76,15 +76,12 @@ public class PlayerController : MonoBehaviour
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
-                    //pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
                     pickup.GetComponent<Animator>().SetInteger("ColorChoice", (int)Random.Range(0,3));
                     pickup.GetComponent<Animator>().SetBool("isActive", true);
                     pickup.SetActive(true);
                    
                 }
-          //      GameObject pickup = SimplePool.Spawn(myPrefab, moveToPostion, Quaternion.identity);
-                //GameObject pickup = Instantiate(myPrefab, moveToPostion, Quaternion.identity, parent);
-          //      pickup.GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value);
+          
             }
         }
 
@@ -102,7 +99,12 @@ public class PlayerController : MonoBehaviour
             {
                 m_Animator.Rebind();
                 m_Animator.SetBool("isIdle", false);
-                m_Animator.Play("RunPlayer");
+                m_Animator.Play("Walking");
+                Transform kachujin = m_kachujin.transform;
+                Vector3 relativePos = spawnPosArray[currentMove] - kachujin.position;
+                Quaternion rotation = Quaternion.LookRotation(relativePos, Vector3.up);
+                m_kachujin.transform.rotation = rotation;
+                Debug.Log("kachujin rot:" + m_kachujin.transform.rotation.eulerAngles);
             }
             
         }
@@ -122,7 +124,7 @@ public class PlayerController : MonoBehaviour
             obj.gameObject.gameObject.tag = "Pickup";
             obj.gameObject.GetComponent<Animator>().SetBool("isActive", true);
             obj.gameObject.Kill();
-            Debug.Log("Reset Pickups");
+            //Debug.Log("Reset Pickups");
         }
     }
 
@@ -130,24 +132,16 @@ public class PlayerController : MonoBehaviour
     {
         this.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
     }
-    // void FixedUpdate() {
-    //     float moveH = Input.GetAxis("Horizontal");
-    //     float moveV = Input.GetAxis("Vertical");
-    //     Vector3 movement = new Vector3(moveH, 0.0f, moveV);
-    //     m_rigibody.AddForce(movement * speed);
-        
-    // }
+   
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Pickup")) {
-            //SimplePool.Despawn(other.gameObject);
-            //other.gameObject.SetActive(false);
-            
+            Debug.Log("trigger");
             count++;
             SetCountText();
             currentMove++;
-            //other.gameObject.Kill();
-             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+            
+            other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             other.gameObject.GetComponent<Animator>().Rebind();
             other.gameObject.GetComponent<Animator>().SetBool("isActive", false);
             other.gameObject.GetComponent<Animator>().Play("FadeOut");
@@ -156,10 +150,18 @@ public class PlayerController : MonoBehaviour
             //     winText.text = "You win!";
             // }
             if (currentMove >= currentSpawn) {
-                //run = false;
                 m_Animator.Rebind();
                 m_Animator.SetBool("isIdle", true);
-                m_Animator.Play("IdlePlayer");
+                m_Animator.Play("Idle");
+                float currentRotY = m_kachujin.transform.rotation.eulerAngles.y;
+                m_kachujin.transform.localRotation = Quaternion.Euler(0, currentRotY, 0);
+            }
+            else
+            {
+                Vector3 relativePos = spawnPosArray[currentMove] - m_kachujin.transform.position;
+                Quaternion rotation = Quaternion.LookRotation(relativePos, Vector3.up);
+                m_kachujin.transform.rotation = rotation;
+                Debug.Log("kachujin rot:" + m_kachujin.transform.rotation.eulerAngles);
             }
         }
     }
