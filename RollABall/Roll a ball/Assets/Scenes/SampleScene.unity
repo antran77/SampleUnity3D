@@ -406,7 +406,7 @@ MonoBehaviour:
   m_rigibody: {fileID: 554444713}
   countText: {fileID: 1067473697}
   winText: {fileID: 1838279877}
-  m_kachujin: {fileID: 554444710}
+  m_kachujin: {fileID: 1568377074}
   myPrefab: {fileID: 4573674863897891387, guid: 7634fb45235197241bb45161c784d457,
     type: 3}
   parent: {fileID: 1366657644}

@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
         colorState = 0;
         
         kachujinOriginalRotation = m_kachujin.transform.rotation;
-        //m_kachujin.transform.Rotate(0,25,0);
+        //m_kachujin.transform.parent.Rotate(0,90,0);
     }
 
     void OnCollisionStay()
