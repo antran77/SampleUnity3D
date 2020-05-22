@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Pickup
   - PickupExit
+  - Pick Up
+  - PickupFire
   layers:
   - Default
   - TransparentFX

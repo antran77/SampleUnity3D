@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public GameObject m_kachujin;
     
     public GameObject myPrefab;
+    public GameObject myPrefabFire;
     public Transform parent;
     public Camera camera;
 
@@ -76,9 +77,16 @@ public class PlayerController : MonoBehaviour
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
-                    pickup.GetComponent<Animator>().SetInteger("ColorChoice", (int)Random.Range(0,3));
+                    int color = (int)Random.Range(0,3);
+                    pickup.GetComponent<Animator>().SetInteger("ColorChoice", color);
                     pickup.GetComponent<Animator>().SetBool("isActive", true);
                     pickup.SetActive(true);
+                    if(color ==1 )//red
+                    {
+                        GameObject fire = myPrefabFire.Spawn(moveToPostion, parent);
+                        
+                        pickup.gameObject.tag = "PickupFire";
+                    }
                    
                 }
           
