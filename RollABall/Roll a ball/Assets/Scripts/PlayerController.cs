@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
-                    int color = 1;//(int)Random.Range(0,3);
+                    int color = (int)Random.Range(0,2);
                     pickup.GetComponent<Animator>().SetInteger("ColorChoice", color);
                     pickup.GetComponent<Animator>().SetBool("isActive", true);
                     pickup.SetActive(true);
