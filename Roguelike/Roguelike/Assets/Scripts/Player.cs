@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Player : MovingObject
 {
     public int wallDamage = 1;
@@ -10,11 +10,13 @@ public class Player : MovingObject
     public float restartLevelDelay = 1f;
     private Animator animator;
     private int food;
+    public Text foodText;	
     // Start is called before the first frame update
     protected override void Start()
     {
         animator = GetComponent<Animator>();
         food = GameManager.instance.playerFoodPoints;
+        foodText.text = "Food: " + food;
         base.Start();
     }
 
@@ -26,21 +28,21 @@ public class Player : MovingObject
     {
         if(!GameManager.instance.playersTurn) return;
 			
-			int horizontal = 0;  	//Used to store the horizontal move direction.
-			int vertical = 0;		//Used to store the vertical move direction.
-	
-			
-			horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
-			vertical = (int) (Input.GetAxisRaw ("Vertical"));
-			
-			if(horizontal != 0)
-			{
-				vertical = 0;
-			}
-            if(horizontal != 0 || vertical != 0)
-			{
-				AttemptMove<Wall> (horizontal, vertical);
-			}
+        int horizontal = 0;  	//Used to store the horizontal move direction.
+        int vertical = 0;		//Used to store the vertical move direction.
+
+        
+        horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
+        vertical = (int) (Input.GetAxisRaw ("Vertical"));
+        
+        if(horizontal != 0)
+        {
+            vertical = 0;
+        }
+        if(horizontal != 0 || vertical != 0)
+        {
+            AttemptMove<Wall> (horizontal, vertical);
+        }
     }
 
 
@@ -50,8 +52,12 @@ public class Player : MovingObject
     }
     protected override void AttemptMove <T> (int xDir, int yDir) 
     {
+        Debug.Log("Attemp move");
         food--;
+        foodText.text = "Food: " + food;
         base.AttemptMove<T>(xDir, yDir);
+        RaycastHit2D hit;
+        Move (xDir, yDir, out hit);
         CheckIfGameOver();
         GameManager.instance.playersTurn = false;
     }
@@ -73,14 +79,14 @@ public class Player : MovingObject
         else if(other.tag == "Food")
         {
             food += pointsPerFood;
-            
+            foodText.text = "+" + pointsPerFood + " Food: " + food;
             other.gameObject.SetActive (false);
         }
         
         else if(other.tag == "Soda")
         {
             food += pointsPerSoda;
-            
+            foodText.text = "+" + pointsPerSoda + " Food: " + food;
             other.gameObject.SetActive (false);
         }
     }
@@ -95,7 +101,7 @@ public class Player : MovingObject
         
         food -= loss;
         
-        
+        foodText.text = "-"+ loss + " Food: " + food;
         CheckIfGameOver ();
     }
 }
