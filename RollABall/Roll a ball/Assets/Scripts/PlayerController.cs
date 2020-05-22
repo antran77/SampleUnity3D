@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
     Quaternion kachujinOriginalRotation;
 
     public GameObject PS_Explosion;
-    public GameObject PS_Respawn;
+    public GameObject PrefabRespawn;
+    bool playerAlive = true;
 
     void Start()
     {
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
         colorState = 0;
         
         kachujinOriginalRotation = m_kachujin.transform.rotation;
+        playerAlive = true;
         //m_kachujin.transform.parent.Rotate(0,90,0);
     }
 
@@ -80,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
-                    int color = (int)Random.Range(0,3);
+                    int color = 1;//(int)Random.Range(0,3);
                     pickup.GetComponent<Animator>().SetInteger("ColorChoice", color);
                     pickup.GetComponent<Animator>().SetBool("isActive", true);
                     pickup.SetActive(true);
@@ -125,6 +127,29 @@ public class PlayerController : MonoBehaviour
         {
             ResetPickup(obj);
         }
+        if(!playerAlive)
+        {
+            if(m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f){
+                m_Animator.gameObject.SetActive(false);
+                //PS_Explosion.SetActive(false);
+                Debug.Log("create respawn");
+                GameObject PS_Respawn = Instantiate( PrefabRespawn, new Vector3(0,1f,0), Quaternion.identity);
+                PS_Respawn.gameObject.name = "Respawn";
+                playerAlive = true;
+            }
+        }
+        // if(PS_Respawn != null){
+        //     Debug.Log(PS_Respawn.GetComponent<SpawnEffect>().isStop());
+
+        //     if(!PS_Respawn.activeSelf)
+        //     {
+        //         Debug.Log("respawn done");
+        //         Destroy(PS_Respawn);
+        //         GameObject parent = GameObject.Find("PlayerBound");
+        //         parent.transform.position = new Vector3(0,0.5f,0);
+        //         m_Animator.gameObject.SetActive(true);
+        //     }
+        // }
     }
 
     private void ResetPickup(GameObject obj)
@@ -139,9 +164,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void ResetPlayer() {
+
+    }
+
     void LateUpdate()
     {
         this.transform.localRotation = Quaternion.Euler(new Vector3(0,0,0));
+       
     }
    
 
@@ -169,10 +199,16 @@ public class PlayerController : MonoBehaviour
             
             if (currentMove >= currentSpawn) {
                 m_Animator.Rebind();
-                m_Animator.SetBool("isIdle", true);
-                m_Animator.Play("Idle");
-                float currentRotY = m_kachujin.transform.rotation.eulerAngles.y;
-                m_kachujin.transform.localRotation = Quaternion.Euler(0, currentRotY, 0);
+                if (isReachPickupFire) {
+                    m_Animator.Rebind();
+                    m_Animator.SetTrigger("die");
+                    playerAlive = false;
+                } else {
+                    m_Animator.SetBool("isIdle", true);
+                    m_Animator.Play("Idle");
+                    float currentRotY = m_kachujin.transform.rotation.eulerAngles.y;
+                    m_kachujin.transform.localRotation = Quaternion.Euler(0, currentRotY, 0);
+                }
             }
             else
             {

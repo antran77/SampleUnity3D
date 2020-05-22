@@ -14,6 +14,9 @@ public class SpawnEffect : MonoBehaviour {
 
     int shaderProperty;
 
+    public bool loop = true;
+    bool done = false;
+
 	void Start ()
     {
         shaderProperty = Shader.PropertyToID("_cutoff");
@@ -24,7 +27,7 @@ public class SpawnEffect : MonoBehaviour {
         main.duration = spawnEffectTime;
 
         ps.Play();
-
+        done = false;
     }
 	
 	void Update ()
@@ -35,12 +38,22 @@ public class SpawnEffect : MonoBehaviour {
         }
         else
         {
-            ps.Play();
-            timer = 0;
+            if(loop) {
+                ps.Play();
+                timer = 0;
+                done = false;
+            } else {
+                done = true;
+            }
         }
 
 
         _renderer.material.SetFloat(shaderProperty, fadeIn.Evaluate( Mathf.InverseLerp(0, spawnEffectTime, timer)));
         
     }
+
+    public bool isFinish() {
+        return done;
+    }
+
 }
