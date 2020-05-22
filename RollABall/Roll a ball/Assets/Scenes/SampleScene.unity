@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045a615dc7c364d46b3aae8dd11c6afe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 5
   m_rigibody: {fileID: 554444713}
   countText: {fileID: 1067473697}
   winText: {fileID: 1838279877}
