@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
 
     Quaternion kachujinOriginalRotation;
 
+    public GameObject PS_Explosion;
+    public GameObject PS_Respawn;
+
     void Start()
     {
         count = 0;   
@@ -84,7 +87,7 @@ public class PlayerController : MonoBehaviour
                     if(color ==1 )//red
                     {
                         GameObject fire = myPrefabFire.Spawn(moveToPostion, parent);
-                        
+                        fire.gameObject.name = "PS_Fire_" + pickup.name;
                         pickup.gameObject.tag = "PickupFire";
                     }
                    
@@ -129,7 +132,7 @@ public class PlayerController : MonoBehaviour
         if(obj.gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
             obj.gameObject.GetComponent<BoxCollider>().isTrigger = true;
-            obj.gameObject.gameObject.tag = "Pickup";
+            obj.gameObject.tag = "Pickup";
             obj.gameObject.GetComponent<Animator>().SetBool("isActive", true);
             obj.gameObject.Kill();
             //Debug.Log("Reset Pickups");
@@ -143,20 +146,27 @@ public class PlayerController : MonoBehaviour
    
 
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject.CompareTag("Pickup")) {
-            Debug.Log("trigger");
+        bool isReachPickup = other.gameObject.CompareTag("Pickup");
+        bool isReachPickupFire = other.gameObject.CompareTag("PickupFire");
+        if (isReachPickup || isReachPickupFire) {
             count++;
             SetCountText();
             currentMove++;
-            
+            if(isReachPickupFire){
+            GameObject ps = GameObject.Find("PS_Fire_"+other.gameObject.name);
+                if(ps!= null){
+                    ps.SetActive(false);
+                }
+                PS_Explosion.SetActive(true);
+                PS_Explosion.transform.position = other.transform.position;
+                PS_Explosion.GetComponent<ParticleSystem>().Play();
+            }
             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             other.gameObject.GetComponent<Animator>().Rebind();
             other.gameObject.GetComponent<Animator>().SetBool("isActive", false);
             other.gameObject.GetComponent<Animator>().Play("FadeOut");
             other.gameObject.tag = "PickupExit";
-            // if (count >= numberOfPickup) {
-            //     winText.text = "You win!";
-            // }
+            
             if (currentMove >= currentSpawn) {
                 m_Animator.Rebind();
                 m_Animator.SetBool("isIdle", true);

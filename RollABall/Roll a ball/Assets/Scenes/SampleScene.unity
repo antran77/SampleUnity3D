@@ -354,6 +354,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399154768}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &449308248 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1947465871}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &554444710 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: ed5519058a8aaa247b92b3a4c7d227ba,
@@ -402,7 +408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 045a615dc7c364d46b3aae8dd11c6afe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 2
   m_rigibody: {fileID: 554444713}
   countText: {fileID: 1067473697}
   winText: {fileID: 1838279877}
@@ -420,6 +426,14 @@ MonoBehaviour:
   moveToPostion: {x: 0, y: 0, z: 0}
   isGround: 0
   ColorChoice: 0
+  PS_Explosion: {fileID: 449308248}
+  PS_Respawn: {fileID: 574186005}
+--- !u!1 &574186005 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1912731163003908, guid: c5febdd93ab44d640b3eb37b768360bb,
+    type: 3}
+  m_PrefabInstance: {fileID: 593342795}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &593342795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1426,6 +1440,10 @@ PrefabInstance:
     - target: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
       propertyPath: m_Name
       value: PS_Explosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 1828176872806910, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4361801158873524, guid: 64891a0eb28db934898420d80ca07cb3, type: 3}
       propertyPath: m_LocalPosition.x
