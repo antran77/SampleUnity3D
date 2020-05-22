@@ -427,7 +427,7 @@ MonoBehaviour:
   isGround: 0
   ColorChoice: 0
   PS_Explosion: {fileID: 449308248}
-  PrefabRespawn: {fileID: 1912731163003908, guid: c5febdd93ab44d640b3eb37b768360bb,
+  PrefabRespawn: {fileID: 1664556095351094671, guid: 8283697471cc3b448b69efa08f2e023f,
     type: 3}
 --- !u!1 &557216761
 GameObject:
@@ -445,7 +445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &557216762
 MonoBehaviour:
   m_ObjectHideFlags: 0

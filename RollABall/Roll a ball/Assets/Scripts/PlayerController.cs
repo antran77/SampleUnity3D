@@ -130,26 +130,23 @@ public class PlayerController : MonoBehaviour
         if(!playerAlive)
         {
             if(m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f){
-                m_Animator.gameObject.SetActive(false);
-                //PS_Explosion.SetActive(false);
-                Debug.Log("create respawn");
-                GameObject PS_Respawn = Instantiate( PrefabRespawn, new Vector3(0,1f,0), Quaternion.identity);
-                PS_Respawn.gameObject.name = "Respawn";
+                Debug.Log("pplay");
+                GameObject o = Instantiate(PrefabRespawn, m_Animator.gameObject.transform.position, Quaternion.identity);
                 playerAlive = true;
+                o.gameObject.name = "PS_Respawn";
             }
         }
-        // if(PS_Respawn != null){
-        //     Debug.Log(PS_Respawn.GetComponent<SpawnEffect>().isStop());
-
-        //     if(!PS_Respawn.activeSelf)
-        //     {
-        //         Debug.Log("respawn done");
-        //         Destroy(PS_Respawn);
-        //         GameObject parent = GameObject.Find("PlayerBound");
-        //         parent.transform.position = new Vector3(0,0.5f,0);
-        //         m_Animator.gameObject.SetActive(true);
-        //     }
-        // }
+        GameObject PS_Respawn = GameObject.Find("PS_Respawn");
+         if(PS_Respawn != null){
+            if(PS_Respawn.GetComponent<ParticleSystem>().isStopped)
+            {
+                Debug.Log("respawn done");
+                Destroy(PS_Respawn);
+                m_Animator.Rebind();
+                m_Animator.SetBool("isIdle", true);
+                m_Animator.Play("Idle");
+            }
+        }
     }
 
     private void ResetPickup(GameObject obj)
