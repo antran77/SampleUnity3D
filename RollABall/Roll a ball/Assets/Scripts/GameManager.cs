@@ -7,10 +7,19 @@ public class GameManager : MonoBehaviour
     GameObject character;
     public static Vector3 characterDiePos;
     
+    public static int characterBlood = 100;
+    public static GAMESTATE gameState;
+    public enum GAMESTATE {
+        Mainmenu,
+        IGM, 
+        Option,
+        Gameplay
+    }
     // Start is called before the first frame update
     void Start()
     {
         character = GameObject.Find("kachujin");
+        gameState = GAMESTATE.Mainmenu;
     }
 
     // Update is called once per frame
@@ -28,4 +37,5 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
 }

@@ -45,9 +45,8 @@ public class PlayerController : MonoBehaviour
     {
         count = 0;   
         run = false;     
-        SetCountText();
-        winText.text = "";
         
+                
         //numberOfPickup = GameObject.FindGameObjectsWithTag("Pickup").Length;
 
         moveToPostion = this.transform.position;
@@ -71,6 +70,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(GameManager.gameState != GameManager.GAMESTATE.Gameplay)
+            return;
         if(Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
@@ -82,7 +83,7 @@ public class PlayerController : MonoBehaviour
                 spawnPosArray[currentSpawn++] = moveToPostion;
                 GameObject pickup = myPrefab.Spawn(moveToPostion, parent);
                 if (pickup != null) {
-                    int color = (int)Random.Range(0,2);
+                    int color = (int)Random.Range(0,3);
                     pickup.GetComponent<Animator>().SetInteger("ColorChoice", color);
                     pickup.GetComponent<Animator>().SetBool("isActive", true);
                     pickup.SetActive(true);
@@ -145,6 +146,7 @@ public class PlayerController : MonoBehaviour
                 m_Animator.Rebind();
                 m_Animator.SetBool("isIdle", true);
                 m_Animator.Play("Idle");
+                GameManager.characterBlood = 100;
             }
         }
     }
@@ -177,7 +179,8 @@ public class PlayerController : MonoBehaviour
         bool isReachPickupFire = other.gameObject.CompareTag("PickupFire");
         if (isReachPickup || isReachPickupFire) {
             count++;
-            SetCountText();
+            if (GameManager.characterBlood > 0) 
+                GameManager.characterBlood -= 20;
             currentMove++;
             if(isReachPickupFire){
             GameObject ps = GameObject.Find("PS_Fire_"+other.gameObject.name);
@@ -217,13 +220,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetCountText() {
-        countText.text = "Catched: " + count.ToString();
-    }
+    // private void SetCountText() {
+    //     countText.text = "Catched: " + count.ToString();
+    // }
 
-    public void Reset() {
-        count = 0;
-        SetCountText();
-        winText.text = "";
-    }
+    // public void Reset() {
+    //     count = 0;
+    //     SetCountText();
+    //     winText.text = "";
+    // }
 }
