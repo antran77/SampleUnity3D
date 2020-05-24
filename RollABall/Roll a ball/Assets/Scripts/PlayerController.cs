@@ -202,6 +202,7 @@ public class PlayerController : MonoBehaviour
                 if (isReachPickupFire) {
                     m_Animator.Rebind();
                     m_Animator.SetTrigger("die");
+                    GameManager.characterBlood = 0;
                     playerAlive = false;
                 } else {
                     m_Animator.SetBool("isIdle", true);
